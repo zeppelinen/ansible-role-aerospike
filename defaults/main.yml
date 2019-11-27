@@ -8,8 +8,6 @@ aerospike_log_directory: /var/log/aerospike
 # Aerospike configuration Vars
 aerospike_cluster_size: 1
 aerospike_service_threads: 4
-aerospike_transaction_queues: 4
-aerospike_transaction_threads: 4
 
 ## Heartbeat configuration Vars
 aerospike_mesh_seed_addresses:

@@ -8,14 +8,24 @@ service {
         pidfile /var/run/aerospike/asd.pid
         paxos-single-replica-limit {{ paxos_single_replica_limit | default(1) }} # Number of nodes where the replica count is automatically reduced to 1.
         service-threads {{ aerospike_service_threads }}
+        {% if aerospike_migrate_threads is defined %}
+        migrate-threads {{ aerospike_migrate_threads }}
+        {% endif %}
+        {% if aerospike_migrate_max_num_incoming is defined %}
+        migrate-max-num-incoming {{ aerospike_migrate_max_num_incoming  }}
+        {% endif %}
         {% if aerospike_transaction_queues is defined %}
         transaction-queues {{ aerospike_transaction_queues }}
         {% endif %}
         {% if aerospike_transaction_threads is defined %}
         transaction-threads-per-queue {{ aerospike_transaction_threads }}
         {% endif %}
-        proto-fd-max {{ aerospike_proto_fd_max | default(15000) }}
-        proto-fd-idle-ms {{ aerospike_proto_fd_idle_ms | default(60000) }}
+        {% if aerospike_proto_fd_max is defined  %}
+        proto-fd-max {{ aerospike_proto_fd_max }}
+        {% endif %}
+        {% if aerospike_proto_fd_idle_ms is defined %}
+        proto-fd-idle-ms {{ aerospike_proto_fd_idle_ms }}
+        {% endif %}
 }
 logging {
         # Log file must be an absolute path.
@@ -54,6 +64,9 @@ network {
         }
 
         fabric {
+                {% if aerospike_channel_bulk_recv_threads is defined %}
+                channel-bulk-recv-threads {{ aerospike_channel_bulk_recv_threads  }}
+                {% endif %}
                 port 3001
         }
 
@@ -65,6 +78,7 @@ network {
 namespace {{ namespace.name }} {
         replication-factor {{ namespace.replication_factor | default(2) }}
     {% if namespace.memory_size is defined %}
+        migrate-sleep {{ namespace.migrate_sleep | default(1)}}
         memory-size {{ namespace.memory_size }}G
     {% endif  %}
         high-water-memory-pct {{ namespace.high_water_memory_pct | default(60) }}

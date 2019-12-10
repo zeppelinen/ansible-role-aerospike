@@ -47,14 +47,15 @@ network {
                 mode multicast
                 port {{ aerospike_multicast_port | default(9918) }}
                 multicast-group {{ aerospike_multicast_group }}
-    {% if aerospike_multicast_address is defined %}
-                address {{ aerospike_multicast_address }}
-    {% endif %}
     {% elif aerospike_mesh_seed_addresses is defined %}	
                 mode mesh
                 port 3002 # Heartbeat port for this node.
                  # List one or more other nodes, one ip-address & port per line:
+                {% if aerospike_heartbeat_address is defined %}
+                address {{ aerospike_heartbeat_address }}
+                {% else %}
                 address any
+                {% endif %}
     {% for ip in aerospike_mesh_seed_addresses %}
                 mesh-seed-address-port {{ ip }} 3002
     {% endfor %}
@@ -67,10 +68,16 @@ network {
                 {% if aerospike_channel_bulk_recv_threads is defined %}
                 channel-bulk-recv-threads {{ aerospike_channel_bulk_recv_threads  }}
                 {% endif %}
+                {% if aerospike_fabric_address is defined %}
+                address {{ aerospike_fabric_address }}
+                {% endif %}
                 port 3001
         }
 
         info {
+                {% if aerospike_info_address is defined %}
+                address {{ aerospike_info_address }}
+                {% endif %}
                 port 3003
         }
 }

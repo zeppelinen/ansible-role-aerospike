@@ -1,7 +1,6 @@
 #jinja2: lstrip_blocks: True
 # Aerospike database configuration file.
 # {{ ansible_managed }}
-
 service {
         user root
         group root
@@ -47,7 +46,7 @@ network {
                 mode multicast
                 port {{ aerospike_multicast_port | default(9918) }}
                 multicast-group {{ aerospike_multicast_group }}
-    {% elif aerospike_mesh_seed_addresses is defined %}	
+    {% elif aerospike_mesh_seed_addresses is defined %}
                 mode mesh
                 port 3002 # Heartbeat port for this node.
                  # List one or more other nodes, one ip-address & port per line:

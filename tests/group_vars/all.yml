@@ -1,2 +1,5 @@
 ---
 aerospike_access_address: "{{ ansible_default_ipv4.address }}"
+aerospike_ips:
+  - 10.132.147.192
+  - 10.132.147.238

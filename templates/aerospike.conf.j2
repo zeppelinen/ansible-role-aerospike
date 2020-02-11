@@ -85,11 +85,11 @@ namespace {{ namespace.name }} {
         replication-factor {{ namespace.replication_factor | default(2) }}
     {% if namespace.memory_size is defined %}
         migrate-sleep {{ namespace.migrate_sleep | default(1)}}
-        memory-size {{ namespace.memory_size }}G
+        memory-size {{ namespace.memory_size }}
     {% endif  %}
         high-water-memory-pct {{ namespace.high_water_memory_pct | default(60) }}
         high-water-disk-pct {{ namespace.high_water_disk_pct | default(50) }}
-        default-ttl {{ namespace.storage_ttl | default(4) }}d # 30 days, use 0 to never expire/evict.
+        default-ttl {{ namespace.storage_ttl | default('4D') }} # 4 days, use 0 to never expire/evict.
 
     {% if namespace.storage_engine is defined %}
         storage-engine device {
@@ -112,7 +112,12 @@ namespace {{ namespace.name }} {
         {% if namespace.storage_engine.write_block_size is defined %}
                 write-block-size {{ namespace.storage_engine.write_block_size }}
         {% endif %}
-
+        {% if namespace.write_commit_level is defined %}
+        write-commit-level-override {{ namespace.write_commit_level }}
+        {% endif %}
+        {% if namespace.transaction_pending_limit is defined %}
+        transaction-pending-limit {{ namespace.transaction_pending_limit }}
+        {% endif %}
         {% if namespace.storage_engine.data_in_memory is defined %}
                 data-in-memory {{ namespace.storage_engine.data_in_memory | lower }}
         {% else %}
